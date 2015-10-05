@@ -1,0 +1,9 @@
+*.py[cod]
+.DS_Store
+Thumbs.db
+__pycache__
+.idea
+.vagrant
+/media
+/static
+/clinic/local_settings.py

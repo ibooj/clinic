@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load bootstrap3 i18n staticfiles %}
+
+{% block title %}{% trans "Запись к доктору" %}{% endblock %}
+
+{% block content_title %}<h1 class="text-center">{% trans "Запись к доктору" %}</h1>{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            {% bootstrap_form_errors form %}
+            <form action="" method="post">{% csrf_token %}
+                {% bootstrap_form form %}
+                <div class="text-center">
+                    <input class="btn btn-primary btn-lg" type="submit" value="{% trans "Отправить" %}"/>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block extra_style %}
+    <link rel="stylesheet" type="text/css" href="{% static "clinic/js/jquery-ui/jquery-ui.min.css" %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static "clinic/js/jquery-ui/jquery-ui.structure.min.css" %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static "clinic/js/jquery-ui/jquery-ui.theme.min.css" %}"/>
+{% endblock %}
+
+
+{% block extra_script %}
+    <script src="{% static 'clinic/js/jquery-ui/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'clinic/js/jquery-ui/i18n/datepicker-ru.js' %}"></script>
+    <script src="{% static 'clinic/js/inputmask/jquery.inputmask.bundle.min.js' %}"></script>
+    <script src="{% static 'clinic/js/inputmask/inputmask.extensions.min.js' %}"></script>
+    <script src="{% static 'clinic/js/jquery.tmpl.min.js' %}"></script>
+    <script type="text/html" id="template_times_item">
+        {% templatetag openvariable %}each items{% templatetag closevariable %}
+        <div class="radio">
+            <label for="id_time_${$index}">
+                <input type="radio" value="${$value}" name="time" id="id_time_${$index}"> ${$value}
+            </label>
+        </div>
+        {% templatetag openvariable %}/each{% templatetag closevariable %}
+    </script>
+    <script>
+        $(function () {
+            $('#id_date').datepicker({
+                dateFormat: 'dd.mm.yyyy',
+                changeMonth: true,
+                //changeYear: true,
+                //yearRange: "-100:+0"
+            }).inputmask('dd.mm.yyyy', {"placeholder": "дд.мм.гггг"});
+            $('#id_date, #id_doctor').change(function () {
+                $.getJSON('/get_times/' + ($('#id_date').val() || '00.00.0000') + '/' + ($('#id_doctor').val() || 0) + '/', function (data) {
+                    if (data.length) {
+                        $('#id_time').html($('#template_times_item').tmpl({items: data}));
+                    }
+                    else {
+                        $('#id_time').html('<h4>{% trans "На выбранную дату все время занято, выберите другую дату или другого доктора." %}</4h>');
+                    }
+
+                });
+            });
+        });
+    </script>
+{% endblock %}
