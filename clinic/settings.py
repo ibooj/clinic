@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'xay$(em!@rz%b+)%kyhmxd8!o2c^1@73#-4tkq*o(5db=zdoc('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
@@ -126,7 +126,7 @@ FIXTURE_DIRS = (
 )
 
 
-try:
-    from clinic.local_settings import *
-except ImportError as e:
-    pass
+# try:
+#     from clinic.local_settings import *
+# except ImportError as e:
+#     pass
